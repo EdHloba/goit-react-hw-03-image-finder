@@ -1,44 +1,45 @@
 import PropTypes from 'prop-types';
-import { Component } from "react";
-import { createPortal } from "react-dom";
-import { Overlay, ModalStyled } from './Modal.styled';
+import css from './Modal.module.css';
 
-const modalRoot = document.getElementById('modal-root');
+import { createPortal } from 'react-dom';
+import { Component } from 'react';
 
-export class Modal extends Component { 
-    componentDidMount() {
-        window.addEventListener('keydown', this.handleKeyDown);
-    };
+const modalRoot = document.querySelector('#modal-root');
 
-    componentWillUnmount() {
-        window.removeEventListener('keydown', this.handleKeyDown);
-    };
+class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleOnClose);
+  }
 
-    handleKeyDown = e => {
-        if (e.code === 'Escape') {
-            this.props.onClose();
-        }
-    };
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleOnClose);
+  }
 
-    handleClickBackdrop = e => {
-        if (e.target === e.currentTarget) {
-            this.props.onClose();
-        }
-    };
+  handleOnClose = e => {
+    if (e.code === 'Escape' || e.currentTarget === e.target) {
+      this.props.onClose();
+    }
+  };
 
-    render() {
-        return createPortal(
-            <Overlay onClick={this.handleClickBackdrop}>
-                <ModalStyled>
-                    {this.props.children}
-                </ModalStyled>
-            </Overlay>,
-            modalRoot,
-        );
-    };
-};
+  render() {
+    const { largeImageURL, tags } = this.props.dataModal;
+    return createPortal(
+      <div className={css.overlay} onClick={this.handleOnClose}>
+        <div className={css.modal}>
+          <img src={largeImageURL} alt={tags} />
+        </div>
+      </div>,
+      modalRoot
+    );
+  }
+}
 
 Modal.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired
+  dataModal: PropTypes.shape({
+    largeImageURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 };
+
+export default Modal;

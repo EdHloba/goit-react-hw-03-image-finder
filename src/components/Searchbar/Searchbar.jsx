@@ -1,49 +1,42 @@
+import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
-import { Component } from "react";
-import { Header, Form, Button, SearchIcon, ButtonLabel, Input } from './Searchbar.styled';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { BsSearch } from 'react-icons/bs';
 
-export class Searchbar extends Component  {
-    state = {
-        query: '',
-    };
+import css from './Searchbar.module.css';
 
-    handleInputChange = e => {
-        this.setState({ query: e.currentTarget.value });
-    };
+const Searchbar = ({ onSubmit }) => {
+  const handleSubmit = async (values, actions) => {
+    await onSubmit(values.query);
+    actions.resetForm();
+  };
 
-    handleSubmit = e => {
-        e.preventDefault();
-        if (this.state.query.trim() === '') {
-            Notify.failure('Sorry, enter something in search line.');
-            return;
-        }
+  return (
+    <header className={css.searchbar}>
+      <Formik initialValues={{ query: '' }} onSubmit={handleSubmit}>
+        <Form className={css.searchForm}>
+          <button type="submit" className={css.searchFormButton}>
+            <BsSearch />
+            <span className="button-label">Search</span>
+          </button>
 
-        this.props.onSubmit(this.state.query);
-        this.setState({ query: '' });
-    }
-
-    render() {
-        return (
-            <Header>
-                <Form onSubmit={this.handleSubmit}>
-                    <Button type="submit"
-                        aria-label="Search">
-                        <SearchIcon size={20} />
-                        <ButtonLabel>Search</ButtonLabel>
-                    </Button>
-                    <Input autoComplete="off"
-                        type="text"
-                        value={this.state.query}
-                        onChange={this.handleInputChange}
-                        autoFocus
-                        placeholder="Search images and photos" />
-                </Form>
-            </Header>
-        );
-    };
+          <label className={css.searchFormButtonLabel}>
+            <Field
+              className={css.searchFormInput}
+              type="text"
+              name="query"
+              autoComplete="off"
+              autoFocus
+              placeholder="Search images and photos"
+            />
+          </label>
+        </Form>
+      </Formik>
+    </header>
+  );
 };
 
 Searchbar.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
+
+export default Searchbar;

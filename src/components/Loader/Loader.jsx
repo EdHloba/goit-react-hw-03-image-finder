@@ -1,17 +1,21 @@
-import { ThreeDots } from 'react-loader-spinner';
-import { Wrap } from './Loader.styled';
+import { ColorRing } from 'react-loader-spinner';
 
-export const Loader = () => {
-    return (
-        <Wrap>
-            <ThreeDots 
-                height="80" 
-                width="80" 
-                radius="9"
-                color="#3f51b5" 
-                ariaLabel="three-dots-loading"
-                visible={true}
-            />
-        </Wrap>
-    )
-}
+const Loader = () => {
+  return (
+    <ColorRing
+      height="100"
+      width="100"
+      color="#4d6da9"
+      ariaLabel="tail-spin-loading"
+      radius="1"
+      wrapperStyle={{
+        display: 'block',
+        margin: '0 auto',
+      }}
+      wrapperClass="loader"
+      visible={true}
+    />
+  );
+};
+
+export default Loader;
