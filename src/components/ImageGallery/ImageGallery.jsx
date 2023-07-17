@@ -148,7 +148,7 @@ class ImageGallery extends Component {
               fontSize: 30,
             }}
           >
-            Waiting new for search...
+            Search results may be here...
           </p>
         )}
       </>
